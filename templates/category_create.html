@@ -1,0 +1,20 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Category Create{% endblock %}
+
+{% block body %}
+
+<h1 class="text-center mb-3">Category Create Form</h1>
+
+<a href="/category/list/" class="btn btn-success">Go Back to Category Table</a>
+
+<form class="mt-5" method="POST" action="/category/create/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

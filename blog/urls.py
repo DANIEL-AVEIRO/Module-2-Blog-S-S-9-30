@@ -31,4 +31,8 @@ urlpatterns = [
     path("post/update/<int:pk>/", views.post_update),
     path("post/delete/<int:pk>/", views.post_delete),
     path("post/detail/<int:pk>/", views.post_detail),
+    path("category/list/", views.category_list),
+    path("category/create/", views.category_create),
+    path("category/update/<int:pk>/", views.category_update),
+    path("category/delete/<int:pk>/", views.category_delete),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
