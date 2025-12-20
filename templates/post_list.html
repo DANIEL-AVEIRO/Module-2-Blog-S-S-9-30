@@ -15,6 +15,7 @@
             <th scope="col">Image</th>
             <th scope="col">Title</th>
             <th scope="col">Viewer</th>
+            <th scope="col">Category</th>
             <th scope="col">Description</th>
             <th scope="col">Create Time</th>
             <th scope="col">Update Time</th>
@@ -22,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-       {% for post in posts %}
+        {% for post in posts %}
         <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>
@@ -34,6 +35,7 @@
             </td>
             <td>{{ post.title }}</td>
             <td><span class="badge bg-success">{{ post.viewer }}</span></td>
+            <td>{{ post.category.name }}</td>
             <td>{{ post.description }}</td>
             <td>{{ post.created_at }}</td>
             <td>{{ post.updated_at }}</td>
