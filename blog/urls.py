@@ -35,4 +35,7 @@ urlpatterns = [
     path("category/create/", views.category_create),
     path("category/update/<int:pk>/", views.category_update),
     path("category/delete/<int:pk>/", views.category_delete),
+    path("login/", views.login_view),
+    path("register/", views.register),
+    path('logout/',views.logout_view),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

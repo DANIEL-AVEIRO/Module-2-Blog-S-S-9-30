@@ -1,11 +1,21 @@
 from django.shortcuts import render, redirect
 from app.models import PostModel, CategoryModel
+from django.db.models import Q  # 1
+from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth.models import User
 
 # Create your views here.
 
 
 def index(request):
+    search = request.GET.get("search")
     posts = PostModel.objects.all()
+    if search:
+        posts = posts.filter(
+            Q(title__icontains=search)
+            | Q(description__icontains=search)
+            | Q(category__name__icontains=search)
+        )
     context = {"posts": posts}
     return render(request, "index.html", context)
 
@@ -126,3 +136,39 @@ def category_delete(request, pk):
     if request.method == "POST":
         category.delete()
         return redirect("/category/list/")
+
+
+def login_view(request):
+    if request.method == "GET":
+        return render(request, "login.html")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        user = authenticate(username=username, password=password)
+
+        # if user is not None:
+        if user:
+            login(request, user)
+        else:
+            return redirect("/login/")
+        return redirect("/")
+
+
+def register(request):
+    if request.method == "GET":
+        return render(request, "register.html")
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        email = request.POST.get("email")
+
+        user = User.objects.create_user(
+            username=username, password=password, email=email
+        )
+        user.save()
+        return redirect("/")
+
+def logout_view(request):
+    logout(request)
+    return redirect('/login/')
