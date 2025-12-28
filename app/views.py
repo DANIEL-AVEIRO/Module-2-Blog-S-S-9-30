@@ -136,10 +136,13 @@ def category_delete(request, pk):
     if request.method == "POST":
         category.delete()
         return redirect("/category/list/")
-
+from django.contrib import messages
 
 def login_view(request):
     if request.method == "GET":
+        if request.user.is_authenticated:
+            messages.warning(request,'You are currently login')
+            return redirect('/')
         return render(request, "login.html")
     if request.method == "POST":
         username = request.POST.get("username")
@@ -150,7 +153,9 @@ def login_view(request):
         # if user is not None:
         if user:
             login(request, user)
+            messages.success(request,'Login successfully')
         else:
+            messages.error(request,'Invalid credential')
             return redirect("/login/")
         return redirect("/")
 
@@ -162,6 +167,12 @@ def register(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         email = request.POST.get("email")
+        
+        existing_user = User.objects.filter(username=username)
+        
+        if existing_user:
+            messages.warning(request,'Username already exists')
+            return redirect('/register/')
 
         user = User.objects.create_user(
             username=username, password=password, email=email
