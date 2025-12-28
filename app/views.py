@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from app.models import PostModel, CategoryModel
+from app.models import PostModel, CategoryModel, CommentModel
 from django.db.models import Q  # 1
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
 # Create your views here.
@@ -136,13 +136,16 @@ def category_delete(request, pk):
     if request.method == "POST":
         category.delete()
         return redirect("/category/list/")
+
+
 from django.contrib import messages
+
 
 def login_view(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            messages.warning(request,'You are currently login')
-            return redirect('/')
+            messages.warning(request, "You are currently login")
+            return redirect("/")
         return render(request, "login.html")
     if request.method == "POST":
         username = request.POST.get("username")
@@ -153,9 +156,9 @@ def login_view(request):
         # if user is not None:
         if user:
             login(request, user)
-            messages.success(request,'Login successfully')
+            messages.success(request, "Login successfully")
         else:
-            messages.error(request,'Invalid credential')
+            messages.error(request, "Invalid credential")
             return redirect("/login/")
         return redirect("/")
 
@@ -167,12 +170,12 @@ def register(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
         email = request.POST.get("email")
-        
+
         existing_user = User.objects.filter(username=username)
-        
+
         if existing_user:
-            messages.warning(request,'Username already exists')
-            return redirect('/register/')
+            messages.warning(request, "Username already exists")
+            return redirect("/register/")
 
         user = User.objects.create_user(
             username=username, password=password, email=email
@@ -180,6 +183,20 @@ def register(request):
         user.save()
         return redirect("/")
 
+
 def logout_view(request):
     logout(request)
-    return redirect('/login/')
+    return redirect("/login/")
+
+
+def comment_create(request, post_pk):
+    post = PostModel.objects.get(id=post_pk)
+    if request.method == "POST":
+        comment = CommentModel.objects.create(
+            message=request.POST.get("message"),
+            author_id=request.user.id,
+            post_id=post.id,
+        )
+        comment.save()
+        messages.success(request, "Comment successfully")
+        return redirect(f"/post/detail/{post.id}/")
