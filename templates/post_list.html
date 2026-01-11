@@ -3,7 +3,7 @@
 {% block title %}Post List{% endblock %}
 
 {% block body %}
-
+{% load humanize %}
 <h1 class="text-center mb-3">Post Table</h1>
 
 <a href="/post/create/" class="btn btn-success">+ Add New Post</a>
@@ -34,10 +34,10 @@
                 {% endif %}
             </td>
             <td>{{ post.title }}</td>
-            <td><span class="badge bg-success">{{ post.viewer }}</span></td>
+            <td><span class="badge bg-success">{{ post.viewer|intword }}</span></td>
             <td>{{ post.category.name }}</td>
             <td>{{ post.description }}</td>
-            <td>{{ post.created_at }}</td>
+            <td>{{ post.created_at|naturalday }}</td>
             <td>{{ post.updated_at }}</td>
             <td>
                 <a href="/post/update/{{ post.id }}/" class="btn btn-primary">Update</a>

@@ -3,6 +3,8 @@ from app.models import PostModel, CategoryModel, CommentModel
 from django.db.models import Q  # 1
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -16,7 +18,10 @@ def index(request):
             | Q(description__icontains=search)
             | Q(category__name__icontains=search)
         )
-    context = {"posts": posts}
+    paginator = Paginator(posts, 2)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    context = {"posts": page_obj}
     return render(request, "index.html", context)
 
 
@@ -90,16 +95,19 @@ def post_delete(request, pk):
 
 def post_detail(request, pk):
     post = PostModel.objects.get(id=pk)
-    context = {"post": post}
+    comments = CommentModel.objects.filter(post_id=post.id).order_by("-created_at")
+    context = {"post": post, "comments": comments}
     return render(request, "post_detail.html", context)
 
 
+@login_required(login_url="/login/")
 def category_list(request):
     categories = CategoryModel.objects.all()
     context = {"categories": categories}
     return render(request, "category_list.html", context)
 
 
+@login_required(login_url="/login/")
 def category_create(request):
     if request.method == "GET":
         return render(request, "category_create.html")
@@ -200,3 +208,7 @@ def comment_create(request, post_pk):
         comment.save()
         messages.success(request, "Comment successfully")
         return redirect(f"/post/detail/{post.id}/")
+
+
+def profile(request):
+    return render(request, "profile.html")

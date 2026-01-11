@@ -23,20 +23,25 @@ from app import views
 from django.conf.urls.static import static
 from django.conf import settings
 
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", views.index),
-    path("post/list/", views.post_list),
-    path("post/create/", views.post_create),
-    path("post/update/<int:pk>/", views.post_update),
-    path("post/delete/<int:pk>/", views.post_delete),
-    path("post/detail/<int:pk>/", views.post_detail),
-    path("category/list/", views.category_list),
-    path("category/create/", views.category_create),
-    path("category/update/<int:pk>/", views.category_update),
-    path("category/delete/<int:pk>/", views.category_delete),
-    path("login/", views.login_view),
-    path("register/", views.register),
-    path("logout/", views.logout_view),
-    path("comment/create/<int:post_pk>/", views.comment_create),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = (
+    [
+        path("admin/", admin.site.urls),
+        path("", views.index),
+        path("post/list/", views.post_list),
+        path("post/create/", views.post_create),
+        path("post/update/<int:pk>/", views.post_update),
+        path("post/delete/<int:pk>/", views.post_delete),
+        path("post/detail/<int:pk>/", views.post_detail),
+        path("category/list/", views.category_list),
+        path("category/create/", views.category_create),
+        path("category/update/<int:pk>/", views.category_update),
+        path("category/delete/<int:pk>/", views.category_delete),
+        path("login/", views.login_view),
+        path("register/", views.register),
+        path("logout/", views.logout_view),
+        path("comment/create/<int:post_pk>/", views.comment_create),
+        path("profile/", views.profile),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)
